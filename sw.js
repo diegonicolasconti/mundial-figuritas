@@ -1,5 +1,5 @@
 /* Mundial Figuritas — offline service worker */
-const CACHE = 'figuritas-v1';
+const CACHE = 'figuritas-v2';
 const ASSETS = [
   './',
   './index.html',

@@ -17,26 +17,32 @@
 <title>Mundial 2026 · Figuritas</title>
 <style>
   :root{
-    /* Panini WC2026 look: white album, baby-blue "26" stickers, vibrant + gold */
-    --bg1:#e6f2fb; --bg2:#ffffff;
-    --card:#ffffff; --ink:#0a2740; --muted:#5c7488; --line:#e1edf6;
-    --falta-bg:#eef4f9; --falta-ink:#9cb0c3; --falta-line:#d2e0ec;
-    --have-a:#149fd6; --have-b:#5cc4ef;
-    --repe-a:#f2a20a; --repe-b:#ffd452; --repe-ink:#6f4405;
-    --accent:#1580c4; --accent-soft:#daeefb;
-    --gold:#f2b705;
-    --usa:#1d63c9; --mex:#12924a; --can:#e0362a;   /* host-trio accents */
+    /* FIFA World Cup 2026: white album strewn with multicolor "26"s, trophy gold,
+       vibrant celebratory spectrum, baby-blue "placed sticker" */
+    --bg1:#eef4fb; --bg2:#ffffff;
+    --card:#ffffff; --ink:#0d1b3a; --muted:#5a6b86; --line:#e6ecf5;
+    --falta-bg:#eef2f8; --falta-ink:#98a9c0; --falta-line:#d7dff0;
+    --have-a:#0ea5e9; --have-b:#24d3e6;            /* vivid sticker cyan-blue */
+    --repe-a:#f5a300; --repe-b:#ffd24a; --repe-ink:#6f4405;
+    --accent:#1976e6; --accent-soft:#dcebfd;
+    --gold:#f5c518;
+    /* FIFA 2026 vibrant spectrum */
+    --c-pink:#e6007e; --c-red:#ec2b3d; --c-orange:#ff6a13; --c-amber:#ffb400;
+    --c-lime:#7ac43b; --c-green:#12a150; --c-teal:#00a99d; --c-cyan:#00a7e1;
+    --c-blue:#1976e6; --c-indigo:#4733d6; --c-purple:#8b2fd9;
+    --spectrum:linear-gradient(100deg,#e6007e,#ff6a13,#f5c518,#12a150,#00a7e1,#1976e6,#8b2fd9);
+    --usa:#1976e6; --mex:#12a150; --can:#ec2b3d;
     --radius:20px;
-    --shadow:0 10px 30px rgba(12,58,94,.10);
-    --shadow-sm:0 3px 10px rgba(12,58,94,.07);
+    --shadow:0 10px 30px rgba(13,27,58,.12);
+    --shadow-sm:0 3px 10px rgba(13,27,58,.08);
     --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   }
   @media (prefers-color-scheme: dark){
     :root{
-      --bg1:#0a1a2b; --bg2:#0f2337;
-      --card:#12283d; --ink:#e8f2fb; --muted:#8aa3ba; --line:#20384f;
-      --falta-bg:#16324a; --falta-ink:#6f8aa3; --falta-line:#274762;
-      --accent-soft:#123651;
+      --bg1:#0a1430; --bg2:#0f1c40;
+      --card:#141f42; --ink:#eaf1fc; --muted:#93a4c4; --line:#24315a;
+      --falta-bg:#1a2750; --falta-ink:#6f80a6; --falta-line:#2b3a68;
+      --accent-soft:#182a55;
       --shadow:0 12px 34px rgba(0,0,0,.5);
       --shadow-sm:0 3px 12px rgba(0,0,0,.42);
     }
@@ -47,9 +53,9 @@
   body{
     font-family:var(--font); color:var(--ink);
     background:
-      url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='150' height='150'><text x='6' y='104' font-family='Arial, sans-serif' font-weight='900' font-size='78' fill='%23145f9c' opacity='0.045'>26</text></svg>") repeat,
-      radial-gradient(1000px 560px at 12% -8%, rgba(21,128,196,.12), transparent 60%),
-      radial-gradient(900px 520px at 108% 0%, rgba(242,183,5,.10), transparent 55%),
+      url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300' font-family='Arial, sans-serif' font-weight='900' font-size='58'><text x='2' y='66' fill='%23e6007e' opacity='0.07'>26</text><text x='168' y='128' fill='%2300a7e1' opacity='0.07'>26</text><text x='74' y='196' fill='%2312a150' opacity='0.07'>26</text><text x='222' y='250' fill='%23ff6a13' opacity='0.07'>26</text><text x='20' y='288' fill='%238b2fd9' opacity='0.07'>26</text></svg>") repeat,
+      radial-gradient(1100px 580px at 12% -8%, rgba(230,0,126,.06), transparent 60%),
+      radial-gradient(1000px 560px at 108% 2%, rgba(0,167,225,.09), transparent 58%),
       linear-gradient(165deg,var(--bg1),var(--bg2));
     background-attachment:fixed;
     min-height:100vh;
@@ -62,20 +68,34 @@
   .wrap{max-width:920px;margin:0 auto;
     padding:0 max(14px, env(safe-area-inset-right)) 0 max(14px, env(safe-area-inset-left));}
 
-  /* ---------- Header ---------- */
+  /* ---------- Header / colorful hero ---------- */
   header.top{
-    padding:calc(16px + env(safe-area-inset-top)) 0 8px; text-align:center;
+    padding:calc(14px + env(safe-area-inset-top)) 0 8px; text-align:center;
   }
-  .logo{
-    font-size:1.55rem;font-weight:850;letter-spacing:-.02em;line-height:1.05;
-    display:inline-flex;align-items:center;gap:.4rem;
+  .hero{
+    position:relative; overflow:hidden;
+    display:flex; align-items:center; justify-content:center; gap:16px;
+    padding:16px 22px; border-radius:22px;
+    background:var(--spectrum);
+    box-shadow:0 12px 30px rgba(13,27,58,.22);
   }
-  .logo .ball{filter:drop-shadow(0 2px 4px rgba(0,0,0,.2));}
-  .logo .yr{
-    background:linear-gradient(90deg,var(--usa),var(--mex) 42%,var(--gold) 68%,var(--can));
-    -webkit-background-clip:text;background-clip:text;color:transparent;
-  }
-  .sub{color:var(--muted);font-size:.82rem;margin-top:2px;font-weight:600;}
+  .hero::after{ content:''; position:absolute; inset:0;
+    background:linear-gradient(180deg, rgba(255,255,255,.14), rgba(0,0,0,.16)); }
+  .hero > *{ position:relative; z-index:1; }
+  /* emblem: gold trophy sitting inside a big "26" */
+  .emblem{ display:inline-flex; align-items:center; }
+  .emblem .cup{ font-size:2.5rem; margin-right:-.12em;
+    filter:drop-shadow(0 2px 4px rgba(0,0,0,.35)); }
+  .emblem .e26{ font-size:2.9rem; font-weight:900; color:#fff; letter-spacing:-.04em;
+    line-height:1; text-shadow:0 2px 8px rgba(0,0,0,.3); }
+  .hero-txt{ text-align:left; }
+  .logo{ display:block; font-size:1.5rem; font-weight:900; letter-spacing:-.02em;
+    line-height:1; color:#fff; text-shadow:0 2px 8px rgba(0,0,0,.28); }
+  .logo .yr{ color:#ffe23d; }
+  .logo2{ display:block; font-size:1.1rem; font-weight:800; color:#fff; opacity:.96;
+    letter-spacing:.06em; text-transform:uppercase; margin-top:3px;
+    text-shadow:0 1px 5px rgba(0,0,0,.28); }
+  .sub{color:var(--muted);font-size:.82rem;margin-top:8px;font-weight:700;}
 
   /* ---------- User switch ---------- */
   .users{display:flex;gap:10px;margin:14px 0 6px;}
@@ -106,16 +126,17 @@
     display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr;gap:8px;margin-bottom:12px;
   }
   .stat{
-    background:var(--card);border-radius:16px;padding:10px 8px;text-align:center;
-    box-shadow:var(--shadow-sm);
+    background:var(--card);border-radius:16px;padding:10px 8px 11px;text-align:center;
+    box-shadow:var(--shadow-sm);border-top:3px solid var(--line);
   }
   .stat b{display:block;font-size:1.25rem;font-weight:850;line-height:1.1;}
   .stat span{font-size:.68rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.03em;}
-  .stat.tengo b{color:var(--have-a);}
-  .stat.repe b{color:var(--repe-a);}
+  .stat.pct{border-top-color:var(--c-blue);}   .stat.pct b{color:var(--c-blue);}
+  .stat.tengo{border-top-color:var(--c-teal);} .stat.tengo b{color:var(--c-teal);}
+  .stat.falta{border-top-color:var(--c-pink);} .stat.falta b{color:var(--c-pink);}
+  .stat.repe{border-top-color:var(--gold);}    .stat.repe b{color:var(--repe-a);}
   .bar{height:8px;border-radius:99px;background:var(--falta-bg);overflow:hidden;margin-top:7px;}
-  .bar>i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--have-a),var(--have-b));transition:width .4s cubic-bezier(.2,.9,.3,1);}
-  .stat.pct b{color:var(--accent);}
+  .bar>i{display:block;height:100%;border-radius:99px;background:var(--spectrum);transition:width .4s cubic-bezier(.2,.9,.3,1);}
 
   /* ---------- Tabs ---------- */
   .tabs{display:flex;gap:6px;background:var(--card);padding:5px;border-radius:14px;box-shadow:var(--shadow-sm);margin-bottom:10px;}
@@ -124,7 +145,7 @@
     font-weight:800;font-size:.82rem;color:var(--muted);padding:9px 4px;border-radius:10px;
     transition:.15s;white-space:nowrap;
   }
-  .tab.active{background:var(--accent);color:#fff;box-shadow:0 3px 8px color-mix(in srgb,var(--accent) 40%, transparent);}
+  .tab.active{background:linear-gradient(90deg,var(--c-cyan),var(--c-blue) 55%,var(--c-purple));color:#fff;box-shadow:0 3px 10px rgba(25,118,230,.4);}
 
   /* ---------- Toolbar ---------- */
   .toolbar{display:flex;gap:8px;align-items:center;margin-bottom:12px;}
@@ -245,7 +266,13 @@
 <div class="wrap">
 
   <header class="top">
-    <div class="logo"><span class="ball">⚽</span> Mundial <span class="yr">2026</span> · Figuritas</div>
+    <div class="hero">
+      <span class="emblem"><span class="cup">🏆</span><span class="e26">26</span></span>
+      <span class="hero-txt">
+        <span class="logo">Mundial <span class="yr">2026</span></span>
+        <span class="logo2">Figuritas</span>
+      </span>
+    </div>
     <div class="sub" id="subline">Álbum Panini oficial · 980 figuritas · 48 selecciones</div>
   </header>
 
@@ -261,7 +288,7 @@
     <div class="stat pct"><b id="s-pct">0%</b><span id="l-completo">Completo</span>
       <div class="bar"><i id="s-bar" style="width:0"></i></div></div>
     <div class="stat tengo"><b id="s-tengo">0</b><span id="l-tengo">Tengo</span></div>
-    <div class="stat"><b id="s-falta">980</b><span id="l-falta">Me faltan</span></div>
+    <div class="stat falta"><b id="s-falta">980</b><span id="l-falta">Me faltan</span></div>
     <div class="stat repe"><b id="s-repe">0</b><span id="l-repe">Repes</span></div>
   </div>
 
