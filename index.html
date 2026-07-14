@@ -3,11 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#eaf5fc" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#0a1a2b" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#080b18">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Figuritas">
 <meta name="format-detection" content="telephone=no">
 <meta name="description" content="Álbum de figuritas del Mundial 2026 para Felipe y Noah — Panini oficial.">
@@ -16,36 +15,30 @@
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <title>Mundial 2026 · Figuritas</title>
 <style>
-  :root{
-    /* FIFA World Cup 2026: white album strewn with multicolor "26"s, trophy gold,
-       vibrant celebratory spectrum, baby-blue "placed sticker" */
-    --bg1:#eef4fb; --bg2:#ffffff;
-    --card:#ffffff; --ink:#0d1b3a; --muted:#5a6b86; --line:#e6ecf5;
-    --falta-bg:#eef2f8; --falta-ink:#98a9c0; --falta-line:#d7dff0;
-    --have-a:#0ea5e9; --have-b:#24d3e6;            /* vivid sticker cyan-blue */
-    --repe-a:#f5a300; --repe-b:#ffd24a; --repe-ink:#6f4405;
-    --accent:#1976e6; --accent-soft:#dcebfd;
-    --gold:#f5c518;
-    /* FIFA 2026 vibrant spectrum */
-    --c-pink:#e6007e; --c-red:#ec2b3d; --c-orange:#ff6a13; --c-amber:#ffb400;
-    --c-lime:#7ac43b; --c-green:#12a150; --c-teal:#00a99d; --c-cyan:#00a7e1;
-    --c-blue:#1976e6; --c-indigo:#4733d6; --c-purple:#8b2fd9;
-    --spectrum:linear-gradient(100deg,#e6007e,#ff6a13,#f5c518,#12a150,#00a7e1,#1976e6,#8b2fd9);
-    --usa:#1976e6; --mex:#12a150; --can:#ec2b3d;
-    --radius:20px;
-    --shadow:0 10px 30px rgba(13,27,58,.12);
-    --shadow-sm:0 3px 10px rgba(13,27,58,.08);
-    --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  @font-face{
+    font-family:'Anton'; font-style:normal; font-weight:400; font-display:swap;
+    src:url('assets/anton.woff2') format('woff2');
   }
-  @media (prefers-color-scheme: dark){
-    :root{
-      --bg1:#0a1430; --bg2:#0f1c40;
-      --card:#141f42; --ink:#eaf1fc; --muted:#93a4c4; --line:#24315a;
-      --falta-bg:#1a2750; --falta-ink:#6f80a6; --falta-line:#2b3a68;
-      --accent-soft:#182a55;
-      --shadow:0 12px 34px rgba(0,0,0,.5);
-      --shadow-sm:0 3px 12px rgba(0,0,0,.42);
-    }
+  :root{
+    /* FIFA World Cup 2026 — bold, dark, official-broadcast look */
+    --bg1:#080b18; --bg2:#0e1428;
+    --card:#141b30; --card2:#1a2340; --ink:#f3f6ff; --muted:#93a1c4; --line:#26314f;
+    --falta-bg:#1a2340; --falta-ink:#6b7aa0; --falta-line:#2c3860;
+    --have-a:#12b5e6; --have-b:#31e0e0;            /* vivid sticker cyan */
+    --repe-a:#ffb400; --repe-b:#ffdd57; --repe-ink:#4a2f00;
+    --accent:#2a86ff; --accent-soft:#16244a;
+    --gold:#ffcc2f;
+    /* FIFA 2026 vibrant spectrum */
+    --c-pink:#ff0f7b; --c-red:#ff2e44; --c-orange:#ff7a18; --c-amber:#ffb400;
+    --c-lime:#8fe039; --c-green:#12c95e; --c-teal:#00cfb4; --c-cyan:#12b5e6;
+    --c-blue:#2a86ff; --c-indigo:#5b3cff; --c-purple:#a02bff;
+    --spectrum:linear-gradient(100deg,#ff0f7b,#ff7a18,#ffcc2f,#12c95e,#12b5e6,#2a86ff,#a02bff);
+    --usa:#2a86ff; --mex:#12c95e; --can:#ff2e44;
+    --radius:18px;
+    --shadow:0 16px 40px rgba(0,0,0,.55);
+    --shadow-sm:0 4px 16px rgba(0,0,0,.4);
+    --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --display:'Anton', var(--font);
   }
   *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
   html,body{margin:0;padding:0;}
@@ -53,10 +46,10 @@
   body{
     font-family:var(--font); color:var(--ink);
     background:
-      url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300' font-family='Arial, sans-serif' font-weight='900' font-size='58'><text x='2' y='66' fill='%23e6007e' opacity='0.07'>26</text><text x='168' y='128' fill='%2300a7e1' opacity='0.07'>26</text><text x='74' y='196' fill='%2312a150' opacity='0.07'>26</text><text x='222' y='250' fill='%23ff6a13' opacity='0.07'>26</text><text x='20' y='288' fill='%238b2fd9' opacity='0.07'>26</text></svg>") repeat,
-      radial-gradient(1100px 580px at 12% -8%, rgba(230,0,126,.06), transparent 60%),
-      radial-gradient(1000px 560px at 108% 2%, rgba(0,167,225,.09), transparent 58%),
-      linear-gradient(165deg,var(--bg1),var(--bg2));
+      url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='320' height='320' font-family='Arial, sans-serif' font-weight='900' font-size='60'><text x='2' y='70' fill='%23ff0f7b' opacity='0.05'>26</text><text x='176' y='134' fill='%2312b5e6' opacity='0.05'>26</text><text x='78' y='206' fill='%2312c95e' opacity='0.05'>26</text><text x='234' y='262' fill='%23ff7a18' opacity='0.05'>26</text><text x='22' y='302' fill='%23a02bff' opacity='0.05'>26</text></svg>") repeat,
+      radial-gradient(1200px 640px at 8% -10%, rgba(160,43,255,.16), transparent 60%),
+      radial-gradient(1100px 620px at 110% -4%, rgba(18,181,230,.16), transparent 58%),
+      linear-gradient(170deg,var(--bg1),var(--bg2) 60%,var(--bg1));
     background-attachment:fixed;
     min-height:100vh;
     padding:0 0 calc(90px + env(safe-area-inset-bottom));
@@ -73,29 +66,40 @@
     padding:calc(14px + env(safe-area-inset-top)) 0 8px; text-align:center;
   }
   .hero{
-    position:relative; overflow:hidden;
-    display:flex; align-items:center; justify-content:center; gap:16px;
-    padding:16px 22px; border-radius:22px;
-    background:var(--spectrum);
-    box-shadow:0 12px 30px rgba(13,27,58,.22);
+    position:relative; overflow:hidden; border-radius:20px;
+    padding:22px 20px 18px;
+    background:
+      radial-gradient(130% 100% at 50% -25%, rgba(42,134,255,.28), transparent 62%),
+      radial-gradient(120% 90% at 90% 120%, rgba(160,43,255,.22), transparent 60%),
+      linear-gradient(160deg,#161d38,#0a0f22);
+    border:1px solid var(--line);
+    box-shadow:var(--shadow);
   }
-  .hero::after{ content:''; position:absolute; inset:0;
-    background:linear-gradient(180deg, rgba(255,255,255,.14), rgba(0,0,0,.16)); }
-  .hero > *{ position:relative; z-index:1; }
-  /* emblem: gold trophy sitting inside a big "26" */
-  .emblem{ display:inline-flex; align-items:center; }
-  .emblem .cup{ font-size:2.5rem; margin-right:-.12em;
-    filter:drop-shadow(0 2px 4px rgba(0,0,0,.35)); }
-  .emblem .e26{ font-size:2.9rem; font-weight:900; color:#fff; letter-spacing:-.04em;
-    line-height:1; text-shadow:0 2px 8px rgba(0,0,0,.3); }
-  .hero-txt{ text-align:left; }
-  .logo{ display:block; font-size:1.5rem; font-weight:900; letter-spacing:-.02em;
-    line-height:1; color:#fff; text-shadow:0 2px 8px rgba(0,0,0,.28); }
-  .logo .yr{ color:#ffe23d; }
-  .logo2{ display:block; font-size:1.1rem; font-weight:800; color:#fff; opacity:.96;
-    letter-spacing:.06em; text-transform:uppercase; margin-top:3px;
-    text-shadow:0 1px 5px rgba(0,0,0,.28); }
-  .sub{color:var(--muted);font-size:.82rem;margin-top:8px;font-weight:700;}
+  .hero::before{ content:''; position:absolute; top:0; left:0; right:0; height:6px; background:var(--spectrum); }
+  .hero-main{ display:flex; align-items:center; justify-content:center; gap:16px; }
+  .emblem-slot{ width:84px; height:84px; flex:none; display:grid; place-items:center; }
+  .emblem-slot img{ max-width:100%; max-height:100%; object-fit:contain;
+    filter:drop-shadow(0 6px 14px rgba(0,0,0,.55)); }
+  .emblem-slot.has-img .emblem-fallback{ display:none; }
+  .emblem-fallback{ position:relative; display:inline-flex; align-items:center; gap:2px;
+    padding:9px 12px; border-radius:16px; background:var(--spectrum);
+    box-shadow:0 6px 16px rgba(0,0,0,.45); }
+  .emblem-fallback .cup{ font-size:2.1rem; filter:drop-shadow(0 2px 3px rgba(0,0,0,.4)); }
+  .emblem-fallback .e26{ font-family:var(--display); font-size:2.4rem; color:#fff; line-height:1;
+    text-shadow:0 2px 6px rgba(0,0,0,.4); }
+  .wordmark{ text-align:left; line-height:.86; }
+  .wordmark .l1{ display:block; font-family:var(--display); font-size:2.7rem; color:#fff;
+    text-transform:uppercase; letter-spacing:.01em; text-shadow:0 3px 12px rgba(0,0,0,.4); }
+  .wordmark .l1 .yr{ color:var(--gold); }
+  .wordmark .l2{ display:block; font-family:var(--display); font-size:1.55rem; letter-spacing:.16em;
+    text-transform:uppercase; margin-top:4px;
+    background:var(--spectrum); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .mascots{ display:flex; gap:8px; justify-content:center; align-items:flex-end; margin-top:12px; }
+  .mascots:empty{ display:none; }
+  .mascots img{ height:58px; width:auto; filter:drop-shadow(0 6px 10px rgba(0,0,0,.4)); }
+  .panini{ display:block; height:26px; width:auto; margin:12px auto 0; opacity:.95; }
+  .sub{color:var(--muted);font-size:.8rem;margin-top:12px;font-weight:700;text-align:center;
+    letter-spacing:.02em;}
 
   /* ---------- User switch ---------- */
   .users{display:flex;gap:10px;margin:14px 0 6px;}
@@ -174,7 +178,9 @@
   .sec-head{
     display:flex;align-items:center;gap:12px;padding:13px 15px;cursor:pointer;user-select:none;
   }
-  .flag{font-size:1.7rem;line-height:1;flex:none;filter:drop-shadow(0 1px 1px rgba(0,0,0,.12));}
+  span.flag{font-size:1.9rem;line-height:1;flex:none;}
+  img.flag{width:38px;height:28px;flex:none;object-fit:cover;border-radius:5px;
+    box-shadow:0 1px 3px rgba(0,0,0,.5), inset 0 0 0 1px rgba(255,255,255,.14);background:#fff;}
   .sec-title{flex:1;min-width:0;}
   .sec-title .nm{font-weight:820;font-size:1rem;letter-spacing:-.01em;display:flex;align-items:center;gap:7px;}
   .sec-title .code{font-size:.66rem;font-weight:800;color:var(--muted);background:var(--falta-bg);padding:2px 6px;border-radius:6px;letter-spacing:.04em;}
@@ -267,11 +273,23 @@
 
   <header class="top">
     <div class="hero">
-      <span class="emblem"><span class="cup">🏆</span><span class="e26">26</span></span>
-      <span class="hero-txt">
-        <span class="logo">Mundial <span class="yr">2026</span></span>
-        <span class="logo2">Figuritas</span>
-      </span>
+      <div class="hero-main">
+        <span class="emblem-slot">
+          <img class="emblem-img" src="assets/emblem.png" alt=""
+               onload="this.closest('.emblem-slot').classList.add('has-img')" onerror="this.remove()">
+          <span class="emblem-fallback"><span class="cup">🏆</span><span class="e26">26</span></span>
+        </span>
+        <span class="wordmark">
+          <span class="l1">Mundial <span class="yr">2026</span></span>
+          <span class="l2">Figuritas</span>
+        </span>
+      </div>
+      <div class="mascots" id="mascots">
+        <img src="assets/mascot1.png" alt="" onerror="this.remove()">
+        <img src="assets/mascot2.png" alt="" onerror="this.remove()">
+        <img src="assets/mascot3.png" alt="" onerror="this.remove()">
+      </div>
+      <img class="panini" src="assets/panini.png" alt="Panini" onerror="this.remove()">
     </div>
     <div class="sub" id="subline">Álbum Panini oficial · 980 figuritas · 48 selecciones</div>
   </header>
@@ -534,6 +552,8 @@ function sortedTeams(){
 }
 // normalize for accent-insensitive search (méxico -> mexico)
 const norm = s => (s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();
+// flag image failed to load -> fall back to the emoji flag
+function flagErr(img){ const s=document.createElement('span'); s.className='flag'; s.textContent=img.dataset.e||'🏳️'; img.replaceWith(s); }
 
 function cellHTML(id, label, small, mark){
   return '<button class="cell" data-id="'+id+'" type="button">'
@@ -567,7 +587,7 @@ function buildAlbum(){
   // ---- Team sections ----
   sortedTeams().forEach(t=>{
     html += '<div class="section" data-key="'+t.code+'" data-name="'+norm(t[lang])+' '+t.code.toLowerCase()+'">'
-          +  '<div class="sec-head"><span class="flag">'+t.flag+'</span>'
+          +  '<div class="sec-head"><img class="flag" src="flags/'+t.code+'.svg" alt="" loading="lazy" data-e="'+t.flag+'" onerror="flagErr(this)">'
           +   '<div class="sec-title"><div class="nm">'+t[lang]+' <span class="code">'+t.code+'</span></div>'
           +     '<div class="miniprog"><i></i></div></div>'
           +   '<div class="sec-count"><span class="c">0</span>/20<small></small></div>'

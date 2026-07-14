@@ -1,14 +1,16 @@
 /* Mundial Figuritas — offline service worker */
-const CACHE = 'figuritas-v2';
+const CACHE = 'figuritas-v3';
+const TEAM_CODES = ['ALG','ARG','AUS','AUT','BEL','BIH','BRA','CAN','CPV','COL','CIV','CRO','CUW','CZE','COD','ECU','EGY','ENG','FRA','GER','GHA','HAI','IRN','IRQ','JPN','JOR','KOR','KSA','MAR','MEX','NED','NOR','NZL','PAN','PAR','POR','QAT','RSA','SCO','SEN','ESP','SUI','SWE','TUN','TUR','URU','USA','UZB'];
 const ASSETS = [
   './',
   './index.html',
   './manifest.webmanifest',
+  './assets/anton.woff2',
   './icon-180.png',
   './icon-192.png',
   './icon-512.png',
   './icon-512-maskable.png'
-];
+].concat(TEAM_CODES.map(c => './flags/' + c + '.svg'));
 
 self.addEventListener('install', e => {
   e.waitUntil(
