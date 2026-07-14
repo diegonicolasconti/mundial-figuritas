@@ -414,7 +414,7 @@
 
   <div class="foot">
     <button id="switch-user" class="switch-btn">🔄 Cambiar usuario</button>
-    <div class="foot-links"><a id="a-export">⬇︎ Guardar copia</a> · <a id="a-import">⬆︎ Cargar copia</a></div>
+    <div class="foot-links"><a id="a-copymissing">📋 Copiar faltantes</a> · <a id="a-export">⬇︎ Guardar copia</a> · <a id="a-import">⬆︎ Cargar copia</a></div>
     <span id="foot-line">Hecho para <b>Felipe &amp; Noah</b> ⚽ · Se guarda solo en este dispositivo.</span>
     <input type="file" id="file" accept="application/json" style="display:none">
   </div>
@@ -500,6 +500,9 @@ const TXT = {
        getSub:'Sus repes que a vos te faltan', noneGive:'Todavía no tenés repes que le sirvan 🙂',
        noneGet:'No hay repes suyas que te falten todavía 🙂', tradeNeed:'Cargá las dos colecciones para ver los cambios.',
        export:'⬇︎ Guardar copia', import:'⬆︎ Cargar copia',
+       copyMissing:'📋 Copiar faltantes', copied:'¡Lista copiada! 📋',
+       missingTitle:(name,count)=>'Le faltan a '+name+' ('+count+' figuritas) — Mundial 2026',
+       complete:'¡Álbum completo! 🎉',
        coverPrompt:'Elegí tu álbum', changeUser:'🔄 Cambiar usuario',
        saved:'Guardado ✓', savefail:'No se pudo guardar ⚠️', noresults:'Sin resultados 🔍',
        madeFor:'Hecho para', foot:'Se guarda solo en este dispositivo.', footSynced:'Sincronizado en tus dispositivos ☁️' },
@@ -515,6 +518,9 @@ const TXT = {
        getSub:'Their doubles that you need', noneGive:'No useful doubles yet 🙂',
        noneGet:'No doubles of theirs you need yet 🙂', tradeNeed:'Fill both collections to see swaps.',
        export:'⬇︎ Save backup', import:'⬆︎ Load backup',
+       copyMissing:'📋 Copy missing', copied:'List copied! 📋',
+       missingTitle:(name,count)=>name+' is missing '+count+' stickers — Mundial 2026',
+       complete:'Album complete! 🎉',
        coverPrompt:'Choose your album', changeUser:'🔄 Change user',
        saved:'Saved ✓', savefail:"Couldn't save ⚠️", noresults:'No results 🔍',
        madeFor:'Made for', foot:'Saved only on this device.', footSynced:'Synced across your devices ☁️' }
@@ -852,6 +858,7 @@ function applyLang(){
   document.querySelector('.legend').children[0].innerHTML='<i class="lg-falta"></i>'+T().lg_falta;
   document.querySelector('.legend').children[1].innerHTML='<i class="lg-tengo"></i>'+T().lg_tengo;
   document.querySelector('.legend').children[2].innerHTML='<i class="lg-repe"></i>'+T().lg_repe;
+  document.getElementById('a-copymissing').textContent=T().copyMissing;
   document.getElementById('a-export').textContent=T().export;
   document.getElementById('a-import').textContent=T().import;
   document.getElementById('switch-user').textContent=T().changeUser;
@@ -949,6 +956,44 @@ async function initCloud(){
   }catch(e){ cloud=null; }
 }
 
+/* ============ COPY MISSING LIST ============ */
+function buildMissingList(){
+  const d = data[user], lines = [];
+  let total = 0;
+  const spec = SPECIALS.filter(s=>!(d[s.code]>=1)).map(s=>s.code);
+  if(spec.length){ lines.push('⭐ '+T().specials+': '+spec.join(', ')); total+=spec.length; }
+  sortedTeams().forEach(t=>{
+    const miss=[];
+    for(let i=1;i<=20;i++){ if(!(d[t.code+i]>=1)) miss.push(i); }
+    if(miss.length){ lines.push(t.flag+' '+t[lang]+' ('+t.code+'): '+miss.join(', ')); total+=miss.length; }
+  });
+  const cc=[];
+  CC.forEach((id,idx)=>{ if(!(d[id]>=1)) cc.push(idx+1); });
+  if(cc.length){ lines.push('🥤 Coca-Cola (CC): '+cc.join(', ')); total+=cc.length; }
+  if(!lines.length) lines.push(T().complete);
+  return T().missingTitle(USERS[user].name, total)+'\n\n'+lines.join('\n');
+}
+function showToast(msg){
+  const s=document.getElementById('saved');
+  s.textContent=msg; s.classList.remove('warn'); s.classList.add('show');
+  clearTimeout(toastTimer); toastTimer=setTimeout(()=>s.classList.remove('show'), 1500);
+}
+async function copyMissing(){
+  const text = buildMissingList();
+  let ok=false;
+  try{ await navigator.clipboard.writeText(text); ok=true; }
+  catch(e){
+    try{
+      const ta=document.createElement('textarea');
+      ta.value=text; ta.setAttribute('readonly',''); ta.style.position='fixed'; ta.style.top='-1000px';
+      document.body.appendChild(ta); ta.select(); ta.setSelectionRange(0, text.length);
+      ok=document.execCommand('copy'); document.body.removeChild(ta);
+    }catch(_){ ok=false; }
+  }
+  if(ok) showToast(T().copied);
+  else prompt(T().copied, text);   // last resort: let them copy manually
+}
+
 /* ============ EXPORT / IMPORT / RESET ============ */
 function doExport(){
   const blob = new Blob([JSON.stringify({app:'mundial-figuritas-2026',version:1,felipe:data.felipe,noah:data.noah},null,2)],{type:'application/json'});
@@ -1021,6 +1066,7 @@ document.getElementById('btn-collapse').addEventListener('click',()=>{
 album.addEventListener('click',e=>{
   const h=e.target.closest('.sec-head'); if(h && !e.target.closest('.cell')) h.parentElement.classList.toggle('collapsed');
 });
+document.getElementById('a-copymissing').addEventListener('click',copyMissing);
 document.getElementById('a-export').addEventListener('click',doExport);
 document.getElementById('a-import').addEventListener('click',()=>document.getElementById('file').click());
 document.getElementById('file').addEventListener('change',e=>{ if(e.target.files[0]) doImport(e.target.files[0]); e.target.value=''; });
