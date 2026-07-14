@@ -260,9 +260,85 @@
   .hint{background:var(--card);border-radius:14px;padding:11px 14px;font-size:.8rem;color:var(--muted);
     box-shadow:var(--shadow-sm);margin-bottom:12px;line-height:1.5;font-weight:600;}
   .hint b{color:var(--ink);}
+
+  /* ---------- Cover / splash ---------- */
+  #cover{ position:fixed; inset:0; z-index:900; overflow-y:auto;
+    background:
+      radial-gradient(1200px 720px at 50% -12%, rgba(42,134,255,.22), transparent 60%),
+      radial-gradient(1000px 640px at 100% 112%, rgba(160,43,255,.22), transparent 60%),
+      linear-gradient(170deg,#0a1024,#05070f);
+    display:flex; flex-direction:column; align-items:center; justify-content:space-between;
+    padding:calc(env(safe-area-inset-top) + 30px) 22px calc(env(safe-area-inset-bottom) + 30px);
+    transition:opacity .5s ease, transform .5s ease; }
+  #cover.hidden{ opacity:0; transform:scale(1.05); pointer-events:none; }
+  .cover-hero{ flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center; width:100%; max-width:460px; }
+  .cover-hero .emblem-slot img{ height:118px; }
+  .cover-hero .wordmark{ margin-top:18px; }
+  .cover-hero .wordmark .kicker{ font-size:1.15rem; letter-spacing:.3em; }
+  .cover-hero .wordmark .l1{ font-size:3.7rem; }
+  .cover-hero .mascots{ margin-top:22px; }
+  .cover-hero .mascots img{ height:90px; }
+  .cover-hero .panini{ height:30px; margin-top:20px; }
+  .cover-select{ width:100%; max-width:440px; margin-top:24px; }
+  .cover-prompt{ text-align:center; color:var(--muted); font-weight:800; text-transform:uppercase;
+    letter-spacing:.14em; font-size:.82rem; margin-bottom:14px; }
+  .cover-users{ display:flex; gap:12px; }
+  .cover-user{ flex:1; border:2px solid var(--line); cursor:pointer; border-radius:20px; padding:18px 12px 15px;
+    background:var(--card); box-shadow:var(--shadow); display:flex; flex-direction:column; align-items:center; gap:8px;
+    font-family:inherit; color:var(--ink); transition:transform .12s, border-color .15s; }
+  .cover-user:active{ transform:scale(.95); }
+  .cover-user .cu-av{ width:58px; height:58px; border-radius:50%; display:grid; place-items:center;
+    font-size:2rem; color:#fff; box-shadow:0 4px 12px rgba(0,0,0,.4); }
+  .cover-user[data-u="felipe"] .cu-av{ background:linear-gradient(135deg,#1461c9,#3fb0e6); }
+  .cover-user[data-u="noah"]  .cu-av{ background:linear-gradient(135deg,#e0392b,#f7961d); }
+  .cover-user[data-u="felipe"]{ border-color:rgba(42,134,255,.5); }
+  .cover-user[data-u="noah"]{ border-color:rgba(224,57,43,.5); }
+  .cover-user .cu-name{ font-family:var(--display); font-size:1.55rem; text-transform:uppercase; letter-spacing:.03em; }
+  .cover-user .cu-pct{ font-size:.74rem; font-weight:800; color:var(--muted); }
+
+  /* change-user button (footer) */
+  .switch-btn{ display:block; width:100%; max-width:340px; margin:0 auto 16px; border:none; cursor:pointer;
+    font-family:var(--display); font-size:1.1rem; text-transform:uppercase; letter-spacing:.06em; color:#fff;
+    padding:15px; border-radius:16px; background:var(--spectrum); box-shadow:var(--shadow-sm);
+    transition:transform .12s; }
+  .switch-btn:active{ transform:scale(.97); }
+  .foot-links{ margin-bottom:8px; }
 </style>
 </head>
 <body>
+
+<div id="cover">
+  <div class="cover-hero">
+    <span class="emblem-slot">
+      <img class="emblem-img" src="assets/emblem.png" alt="FIFA World Cup 2026"
+           onload="this.closest('.emblem-slot').classList.add('has-img')" onerror="this.remove()">
+      <span class="emblem-fallback"><span class="cup">🏆</span><span class="e26">26</span></span>
+    </span>
+    <span class="wordmark">
+      <span class="kicker">Mundial 2026</span>
+      <span class="l1">Figuritas</span>
+    </span>
+    <div class="mascots">
+      <img src="assets/mascot1.png" alt="" onerror="this.remove()">
+      <img src="assets/mascot2.png" alt="" onerror="this.remove()">
+      <img src="assets/mascot3.png" alt="" onerror="this.remove()">
+    </div>
+    <img class="panini" src="assets/panini.png" alt="Panini" onerror="this.remove()">
+  </div>
+  <div class="cover-select">
+    <div class="cover-prompt" id="cover-prompt">Elegí tu álbum</div>
+    <div class="cover-users" id="cover-users">
+      <button class="cover-user" data-u="felipe">
+        <span class="cu-av">🦁</span><span class="cu-name">Felipe</span><span class="cu-pct" id="cu-pct-felipe">0%</span>
+      </button>
+      <button class="cover-user" data-u="noah">
+        <span class="cu-av">🦅</span><span class="cu-name">Noah</span><span class="cu-pct" id="cu-pct-noah">0%</span>
+      </button>
+    </div>
+  </div>
+</div>
+
 <div class="wrap">
 
   <header class="top">
@@ -286,11 +362,6 @@
     <div class="sub" id="subline">Álbum Panini oficial · 980 figuritas · 48 selecciones</div>
   </header>
 
-  <!-- User switch -->
-  <div class="users" id="users">
-    <button class="user" data-u="felipe"><span class="av">🦁</span><span>Felipe</span></button>
-    <button class="user" data-u="noah"><span class="av">🦅</span><span>Noah</span></button>
-  </div>
   <div class="banner" id="banner">Estás editando el álbum de Felipe</div>
 
   <!-- Stats -->
@@ -340,8 +411,9 @@
   <div class="trade" id="trade" style="display:none"></div>
 
   <div class="foot">
-    <span id="foot-line">Hecho para <b>Felipe &amp; Noah</b> ⚽ · Se guarda solo en este dispositivo.</span><br>
-    <a id="a-export">⬇︎ Guardar copia</a> · <a id="a-import">⬆︎ Cargar copia</a> · <a id="a-reset">↺ Reiniciar álbum</a>
+    <button id="switch-user" class="switch-btn">🔄 Cambiar usuario</button>
+    <div class="foot-links"><a id="a-export">⬇︎ Guardar copia</a> · <a id="a-import">⬆︎ Cargar copia</a></div>
+    <span id="foot-line">Hecho para <b>Felipe &amp; Noah</b> ⚽ · Se guarda solo en este dispositivo.</span>
     <input type="file" id="file" accept="application/json" style="display:none">
   </div>
 </div>
@@ -425,8 +497,8 @@ const TXT = {
        give:u=>'Le puedo dar a '+u, get:u=>u+' me puede dar', giveSub:'Tus repes que a él le faltan',
        getSub:'Sus repes que a vos te faltan', noneGive:'Todavía no tenés repes que le sirvan 🙂',
        noneGet:'No hay repes suyas que te falten todavía 🙂', tradeNeed:'Cargá las dos colecciones para ver los cambios.',
-       export:'⬇︎ Guardar copia', import:'⬆︎ Cargar copia', reset:'↺ Reiniciar álbum',
-       resetAsk:u=>'¿Seguro que querés borrar TODO el álbum de '+u+'? No se puede deshacer.',
+       export:'⬇︎ Guardar copia', import:'⬆︎ Cargar copia',
+       coverPrompt:'Elegí tu álbum', changeUser:'🔄 Cambiar usuario',
        saved:'Guardado ✓', savefail:'No se pudo guardar ⚠️', noresults:'Sin resultados 🔍',
        madeFor:'Hecho para', foot:'Se guarda solo en este dispositivo.' },
   en:{ sub:'Official Panini album · 980 stickers · 48 teams',
@@ -440,8 +512,8 @@ const TXT = {
        give:u=>'I can give '+u, get:u=>u+' can give me', giveSub:'Your doubles that they need',
        getSub:'Their doubles that you need', noneGive:'No useful doubles yet 🙂',
        noneGet:'No doubles of theirs you need yet 🙂', tradeNeed:'Fill both collections to see swaps.',
-       export:'⬇︎ Save backup', import:'⬆︎ Load backup', reset:'↺ Reset album',
-       resetAsk:u=>'Really erase '+u+"'s ENTIRE album? This can't be undone.",
+       export:'⬇︎ Save backup', import:'⬆︎ Load backup',
+       coverPrompt:'Choose your album', changeUser:'🔄 Change user',
        saved:'Saved ✓', savefail:"Couldn't save ⚠️", noresults:'No results 🔍',
        madeFor:'Made for', foot:'Saved only on this device.' }
 };
@@ -766,7 +838,8 @@ function applyLang(){
   document.querySelector('.legend').children[2].innerHTML='<i class="lg-repe"></i>'+T().lg_repe;
   document.getElementById('a-export').textContent=T().export;
   document.getElementById('a-import').textContent=T().import;
-  document.getElementById('a-reset').textContent=T().reset;
+  document.getElementById('switch-user').textContent=T().changeUser;
+  document.getElementById('cover-prompt').textContent=T().coverPrompt;
   document.getElementById('foot-line').innerHTML=T().madeFor+' <b>Felipe &amp; Noah</b> ⚽ · '+T().foot;
   document.getElementById('banner').textContent=T().editing(USERS[user].name);
   document.getElementById('noresults').textContent=T().noresults;
@@ -822,14 +895,34 @@ function doImport(file){
   }catch(e){ alert('Archivo inválido / Invalid file'); } };
   r.readAsText(file);
 }
-function doReset(){
-  if(confirm(T().resetAsk(USERS[user].name))){
-    data[user]={}; scheduleSave(); refreshAll(); if(filter==='cambios')renderTrade();
+/* ============ COVER / USER SELECTION ============ */
+function updateCoverPct(){
+  for(const u of ['felipe','noah']){
+    let have=0; const d=data[u];
+    for(const id in d){ if(d[id]>=1) have++; }
+    const el=document.getElementById('cu-pct-'+u);
+    if(el) el.textContent = Math.round(have/TOTAL*100)+'%';
   }
+}
+function showCover(){
+  updateCoverPct();
+  document.getElementById('cover').classList.remove('hidden');
+  document.body.style.overflow='hidden';
+  window.scrollTo(0,0);
+}
+function hideCover(){
+  document.getElementById('cover').classList.add('hidden');
+  document.body.style.overflow='';
+}
+function enterAlbum(u){
+  if(u!==user){ user=u; applyUser(); refreshAll(); if(filter==='cambios')renderTrade(); }
+  window.scrollTo(0,0);
+  hideCover();
 }
 
 /* ============ EVENTS ============ */
-document.getElementById('users').addEventListener('click',e=>{const b=e.target.closest('.user'); if(b)switchUser(b.dataset.u);});
+document.getElementById('cover-users').addEventListener('click',e=>{const b=e.target.closest('.cover-user'); if(b)enterAlbum(b.dataset.u);});
+document.getElementById('switch-user').addEventListener('click',()=>{ switchUser(user==='felipe'?'noah':'felipe'); window.scrollTo(0,0); });
 document.getElementById('tabs').addEventListener('click',e=>{
   const b=e.target.closest('.tab'); if(!b)return;
   filter=b.dataset.f;
@@ -853,7 +946,6 @@ album.addEventListener('click',e=>{
 document.getElementById('a-export').addEventListener('click',doExport);
 document.getElementById('a-import').addEventListener('click',()=>document.getElementById('file').click());
 document.getElementById('file').addEventListener('change',e=>{ if(e.target.files[0]) doImport(e.target.files[0]); e.target.value=''; });
-document.getElementById('a-reset').addEventListener('click',doReset);
 document.getElementById('btn-menu').addEventListener('click',()=>{
   hintHidden = !hintHidden;
   lsSet(LS.hint, hintHidden?'1':'0');
@@ -865,6 +957,7 @@ buildAlbum();
 applyLang();
 applyUser();
 refreshAll();
+showCover();   // greet with the cover; user picks Felipe or Noah to enter
 
 /* ============ PWA: offline service worker (skipped on file://) ============ */
 if('serviceWorker' in navigator && location.protocol.startsWith('http')){
