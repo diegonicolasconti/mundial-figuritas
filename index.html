@@ -66,40 +66,34 @@
     padding:calc(14px + env(safe-area-inset-top)) 0 8px; text-align:center;
   }
   .hero{
-    position:relative; overflow:hidden; border-radius:20px;
-    padding:22px 20px 18px;
+    position:relative; overflow:hidden; border-radius:20px; text-align:center;
+    padding:24px 20px 20px;
     background:
-      radial-gradient(130% 100% at 50% -25%, rgba(42,134,255,.28), transparent 62%),
-      radial-gradient(120% 90% at 90% 120%, rgba(160,43,255,.22), transparent 60%),
-      linear-gradient(160deg,#161d38,#0a0f22);
+      radial-gradient(130% 100% at 50% -25%, rgba(42,134,255,.30), transparent 62%),
+      radial-gradient(120% 90% at 88% 120%, rgba(160,43,255,.24), transparent 60%),
+      linear-gradient(160deg,#171f3c,#090d1e);
     border:1px solid var(--line);
     box-shadow:var(--shadow);
   }
   .hero::before{ content:''; position:absolute; top:0; left:0; right:0; height:6px; background:var(--spectrum); }
-  .hero-main{ display:flex; align-items:center; justify-content:center; gap:16px; }
-  .emblem-slot{ width:84px; height:84px; flex:none; display:grid; place-items:center; }
-  .emblem-slot img{ max-width:100%; max-height:100%; object-fit:contain;
-    filter:drop-shadow(0 6px 14px rgba(0,0,0,.55)); }
+  .emblem-slot{ display:inline-flex; align-items:center; justify-content:center;
+    background:#fff; border-radius:16px; padding:9px 16px; box-shadow:0 10px 26px rgba(0,0,0,.5); }
+  .emblem-slot img{ height:94px; width:auto; display:block; }
   .emblem-slot.has-img .emblem-fallback{ display:none; }
-  .emblem-fallback{ position:relative; display:inline-flex; align-items:center; gap:2px;
-    padding:9px 12px; border-radius:16px; background:var(--spectrum);
-    box-shadow:0 6px 16px rgba(0,0,0,.45); }
-  .emblem-fallback .cup{ font-size:2.1rem; filter:drop-shadow(0 2px 3px rgba(0,0,0,.4)); }
-  .emblem-fallback .e26{ font-family:var(--display); font-size:2.4rem; color:#fff; line-height:1;
-    text-shadow:0 2px 6px rgba(0,0,0,.4); }
-  .wordmark{ text-align:left; line-height:.86; }
-  .wordmark .l1{ display:block; font-family:var(--display); font-size:2.7rem; color:#fff;
-    text-transform:uppercase; letter-spacing:.01em; text-shadow:0 3px 12px rgba(0,0,0,.4); }
-  .wordmark .l1 .yr{ color:var(--gold); }
-  .wordmark .l2{ display:block; font-family:var(--display); font-size:1.55rem; letter-spacing:.16em;
-    text-transform:uppercase; margin-top:4px;
-    background:var(--spectrum); -webkit-background-clip:text; background-clip:text; color:transparent; }
-  .mascots{ display:flex; gap:8px; justify-content:center; align-items:flex-end; margin-top:12px; }
+  .emblem-fallback{ display:inline-flex; align-items:center; gap:2px; }
+  .emblem-fallback .cup{ font-size:2.1rem; }
+  .emblem-fallback .e26{ font-family:var(--display); font-size:2.6rem; color:#0a0f22; line-height:1; }
+  .wordmark{ display:block; margin-top:14px; line-height:.86; }
+  .wordmark .kicker{ display:block; font-family:var(--display); font-size:1rem; letter-spacing:.26em;
+    color:var(--gold); text-transform:uppercase; margin-bottom:3px; }
+  .wordmark .l1{ display:block; font-family:var(--display); font-size:3rem; letter-spacing:.02em;
+    text-transform:uppercase; background:var(--spectrum); -webkit-background-clip:text; background-clip:text;
+    color:transparent; }
+  .mascots{ display:flex; gap:10px; justify-content:center; align-items:flex-end; margin-top:16px; }
   .mascots:empty{ display:none; }
-  .mascots img{ height:58px; width:auto; filter:drop-shadow(0 6px 10px rgba(0,0,0,.4)); }
-  .panini{ display:block; height:26px; width:auto; margin:12px auto 0; opacity:.95; }
-  .sub{color:var(--muted);font-size:.8rem;margin-top:12px;font-weight:700;text-align:center;
-    letter-spacing:.02em;}
+  .mascots img{ height:72px; width:auto; filter:drop-shadow(0 8px 12px rgba(0,0,0,.45)); }
+  .panini{ display:block; height:27px; width:auto; margin:16px auto 0; filter:drop-shadow(0 4px 9px rgba(0,0,0,.45)); }
+  .sub{color:var(--muted);font-size:.8rem;margin-top:12px;font-weight:700;text-align:center;letter-spacing:.02em;}
 
   /* ---------- User switch ---------- */
   .users{display:flex;gap:10px;margin:14px 0 6px;}
@@ -273,17 +267,15 @@
 
   <header class="top">
     <div class="hero">
-      <div class="hero-main">
-        <span class="emblem-slot">
-          <img class="emblem-img" src="assets/emblem.png" alt=""
-               onload="this.closest('.emblem-slot').classList.add('has-img')" onerror="this.remove()">
-          <span class="emblem-fallback"><span class="cup">🏆</span><span class="e26">26</span></span>
-        </span>
-        <span class="wordmark">
-          <span class="l1">Mundial <span class="yr">2026</span></span>
-          <span class="l2">Figuritas</span>
-        </span>
-      </div>
+      <span class="emblem-slot">
+        <img class="emblem-img" src="assets/emblem.png" alt="FIFA World Cup 2026"
+             onload="this.closest('.emblem-slot').classList.add('has-img')" onerror="this.remove()">
+        <span class="emblem-fallback"><span class="cup">🏆</span><span class="e26">26</span></span>
+      </span>
+      <span class="wordmark">
+        <span class="kicker">Mundial 2026</span>
+        <span class="l1">Figuritas</span>
+      </span>
       <div class="mascots" id="mascots">
         <img src="assets/mascot1.png" alt="" onerror="this.remove()">
         <img src="assets/mascot2.png" alt="" onerror="this.remove()">
