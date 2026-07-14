@@ -13,6 +13,8 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<script defer src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script defer src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script>
 <title>Mundial 2026 · Figuritas</title>
 <style>
   @font-face{
@@ -500,7 +502,7 @@ const TXT = {
        export:'⬇︎ Guardar copia', import:'⬆︎ Cargar copia',
        coverPrompt:'Elegí tu álbum', changeUser:'🔄 Cambiar usuario',
        saved:'Guardado ✓', savefail:'No se pudo guardar ⚠️', noresults:'Sin resultados 🔍',
-       madeFor:'Hecho para', foot:'Se guarda solo en este dispositivo.' },
+       madeFor:'Hecho para', foot:'Se guarda solo en este dispositivo.', footSynced:'Sincronizado en tus dispositivos ☁️' },
   en:{ sub:'Official Panini album · 980 stickers · 48 teams',
        editing:u=>"Editing "+u+"'s album", completo:'Complete', tengo:'Got', falta:'Missing', repe:'Doubles',
        todas:'All', faltan:'Missing', repes:'Doubles', cambios:'Swaps 🔁',
@@ -515,7 +517,7 @@ const TXT = {
        export:'⬇︎ Save backup', import:'⬆︎ Load backup',
        coverPrompt:'Choose your album', changeUser:'🔄 Change user',
        saved:'Saved ✓', savefail:"Couldn't save ⚠️", noresults:'No results 🔍',
-       madeFor:'Made for', foot:'Saved only on this device.' }
+       madeFor:'Made for', foot:'Saved only on this device.', footSynced:'Synced across your devices ☁️' }
 };
 
 const USERS = {
@@ -533,6 +535,19 @@ let user = lsGet(LS.user)==='noah' ? 'noah' : 'felipe';
 let filter = 'todas';
 let collapsedAll = false;
 let hintHidden = lsGet(LS.hint)==='1';
+
+// ---- Cloud sync (Firebase Realtime Database). Null => local-only. ----
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyBEOpPbOubm6fwNZv27BL2GUInQdKWarVg",
+  authDomain: "figuritas-c353c.firebaseapp.com",
+  databaseURL: "https://figuritas-c353c-default-rtdb.firebaseio.com",
+  projectId: "figuritas-c353c",
+  storageBucket: "figuritas-c353c.firebasestorage.app",
+  messagingSenderId: "706580289163",
+  appId: "1:706580289163:web:6f79b730b4c262e168e68e"
+};
+let cloud = null;      // { db } once connected
+let synced = false;    // reflected in the footer text
 
 const data = { felipe:loadUser(LS.fel), noah:loadUser(LS.noa) };
 function loadUser(k){ try{ return JSON.parse(lsGet(k)||'{}')||{}; }catch(e){ return {}; } }
@@ -720,6 +735,7 @@ function setCount(id, c){
   c = Math.max(0, Math.min(99, c));
   if(c===0) delete data[user][id]; else data[user][id]=c;
   scheduleSave();
+  cloudWrite(user, id, c);
 }
 
 album.addEventListener('click', e=>{
@@ -840,7 +856,7 @@ function applyLang(){
   document.getElementById('a-import').textContent=T().import;
   document.getElementById('switch-user').textContent=T().changeUser;
   document.getElementById('cover-prompt').textContent=T().coverPrompt;
-  document.getElementById('foot-line').innerHTML=T().madeFor+' <b>Felipe &amp; Noah</b> ⚽ · '+T().foot;
+  document.getElementById('foot-line').innerHTML=T().madeFor+' <b>Felipe &amp; Noah</b> ⚽ · '+(synced?T().footSynced:T().foot);
   document.getElementById('banner').textContent=T().editing(USERS[user].name);
   document.getElementById('noresults').textContent=T().noresults;
   lsSet(LS.lang, lang);
@@ -871,6 +887,68 @@ function flushSave(){ if(saveTimer||dirty){ clearTimeout(saveTimer); saveTimer=n
 addEventListener('pagehide', flushSave);
 document.addEventListener('visibilitychange', ()=>{ if(document.visibilityState==='hidden') flushSave(); });
 
+/* ============ CLOUD SYNC (Firebase Realtime DB) ============ */
+const LSKEY = { felipe:LS.fel, noah:LS.noa };
+function cleanMap(o){ const out={}; if(o) for(const k in o){ const n=parseInt(o[k],10); if(Number.isFinite(n)&&n>0) out[k]=Math.min(99,n); } return out; }
+// write a single sticker change up to the cloud
+function cloudWrite(u, id, c){
+  if(cloud){ try{ cloud.db.ref('albums/'+u+'/'+id).set(c>0?c:null); }catch(e){} }
+}
+// push a whole album (used after import / bootstrap)
+function cloudPush(u){
+  if(cloud){ try{ cloud.db.ref('albums/'+u).set(data[u]||{}); }catch(e){} }
+}
+// remote change arrived for user u — reconcile into local + UI without a full re-render
+function onRemote(u, val){
+  const next = cleanMap(val), prev = data[u]||{};
+  data[u] = next;
+  lsSet(LSKEY[u], JSON.stringify(next));
+  if(u===user){
+    const ids = new Set([...Object.keys(prev), ...Object.keys(next)]);
+    let changed=false;
+    ids.forEach(id=>{
+      if((prev[id]||0)!==(next[id]||0)){
+        changed=true;
+        const cell=document.querySelector('.cell[data-id="'+id+'"]');
+        if(cell) refreshCell(cell);
+      }
+    });
+    if(changed){
+      document.querySelectorAll('.section').forEach(refreshSection);
+      updateStats();
+      if(filter==='faltan'||filter==='repes'){ applyFilter(); }
+      if(filter==='cambios'){ renderTrade(); }
+    }
+  } else if(filter==='cambios'){ renderTrade(); }
+  updateCoverPct();
+}
+function markSynced(){
+  synced=true;
+  const fl=document.getElementById('foot-line');
+  if(fl) fl.innerHTML=T().madeFor+' <b>Felipe &amp; Noah</b> ⚽ · '+T().footSynced;
+}
+async function initCloud(){
+  if(!FIREBASE_CONFIG || typeof firebase==='undefined') return;   // offline / not configured
+  try{
+    firebase.initializeApp(FIREBASE_CONFIG);
+    cloud = { db: firebase.database() };
+    // bootstrap each album: union with cloud (cloud wins on conflicts) so nothing owned is ever lost
+    await Promise.all(['felipe','noah'].map(u=>{
+      const ref=cloud.db.ref('albums/'+u);
+      return ref.once('value').then(snap=>{
+        const merged=cleanMap(Object.assign({}, data[u]||{}, snap.val()||{}));
+        data[u]=merged; lsSet(LSKEY[u], JSON.stringify(merged));
+        return ref.set(merged);
+      });
+    }));
+    // now cloud is source of truth — live-sync ongoing changes
+    ['felipe','noah'].forEach(u=>{
+      cloud.db.ref('albums/'+u).on('value', s=>onRemote(u, s.val()||{}));
+    });
+    refreshAll(); updateCoverPct(); markSynced();
+  }catch(e){ cloud=null; }
+}
+
 /* ============ EXPORT / IMPORT / RESET ============ */
 function doExport(){
   const blob = new Blob([JSON.stringify({app:'mundial-figuritas-2026',version:1,felipe:data.felipe,noah:data.noah},null,2)],{type:'application/json'});
@@ -889,9 +967,9 @@ function doImport(file){
     const o=JSON.parse(r.result);
     const f=cleanColl(o.felipe), n=cleanColl(o.noah);
     if(!f && !n){ alert('Archivo inválido / Invalid file'); return; }
-    if(f) data.felipe=f;
-    if(n) data.noah=n;
-    scheduleSave(); refreshAll(); if(filter==='cambios')renderTrade();
+    if(f){ data.felipe=f; cloudPush('felipe'); }
+    if(n){ data.noah=n; cloudPush('noah'); }
+    scheduleSave(); refreshAll(); updateCoverPct(); if(filter==='cambios')renderTrade();
   }catch(e){ alert('Archivo inválido / Invalid file'); } };
   r.readAsText(file);
 }
@@ -959,10 +1037,13 @@ applyUser();
 refreshAll();
 showCover();   // greet with the cover; user picks Felipe or Noah to enter
 
-/* ============ PWA: offline service worker (skipped on file://) ============ */
-if('serviceWorker' in navigator && location.protocol.startsWith('http')){
-  window.addEventListener('load', ()=>{ navigator.serviceWorker.register('sw.js').catch(()=>{}); });
-}
+/* ============ PWA + cloud sync (after external scripts have loaded) ============ */
+window.addEventListener('load', ()=>{
+  if('serviceWorker' in navigator && location.protocol.startsWith('http')){
+    navigator.serviceWorker.register('sw.js').catch(()=>{});
+  }
+  initCloud();   // connects to Firebase if online + configured; else stays local
+});
 </script>
 </body>
 </html>
